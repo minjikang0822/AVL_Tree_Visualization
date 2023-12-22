@@ -2,11 +2,13 @@
 <%@ page session="false" %>
 <html>
 <head>
-	<title>Home</title>
+	<meta charset="UTF-8">
+	<title>AVL Tree Visualization</title>
+	<link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/resources/css/main.css">
 </head>
 <body>
 <h1>
-	Hello world!  
+	AVL Tree Visualization 
 </h1>
 
 <P>  The time on the server is ${serverTime}. </P>
