@@ -1,1 +1,27 @@
 @charset "UTF-8";
+
+/*
+lime: #EBFF82
+apricot: #FFF2CC
+*/
+
+body {
+	margin: 10px;
+	background-color: #FFF2CC;
+}
+
+.insertion, .deletion {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            flex-wrap: wrap; /* 요소가 너무 많을 때 다음 줄로 넘어가도록 설정 */
+            text-align: center;
+        }
+
+/* 각 요소의 높이를 맞추기 위해 flexbox 사용 */
+.insertion > * , .deletion > * {
+	display: inline-block;
+    vertical-align: middle; /* 세로 방향으로 정렬 */
+    horizontal-align: middle;
+    margin: 5px;
+}
