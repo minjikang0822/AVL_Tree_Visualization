@@ -10,6 +10,19 @@
 </head>
 
 <script>
+	function insertNode(newValue){
+		$.ajax({
+			type: 'POST',
+			url: '/insert',
+			data: 'newValue=' + newValue
+			
+			/* res holds the response data sent by the server */
+			success: function(res){
+				
+			}
+		})
+	}
+
     function resetTree() {
         alert('resetTree');
     }
