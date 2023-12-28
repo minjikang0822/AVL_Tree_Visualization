@@ -65,7 +65,10 @@ public class AVLTreeServiceImpl implements AVLTreeService{
 		NodeVO R = A.getRight();
 		NodeVO LR = L.getRight();
 		
+		L.setRight(A);
+		A.setLeft(LR);
 		
+		setNewChild(parentA, A, L);
 	}
 	
 	// CASE 3: LEFT ROTATION
@@ -77,12 +80,7 @@ public class AVLTreeServiceImpl implements AVLTreeService{
 		R.setLeft(A);
 		A.setRight(RL);
 		
-		if (parentA.getLeft() == A) {
-			parentA.setLeft(R);
-		}
-		else {
-			parentA.setRight(R);
-		}
+		setNewChild(parentA, A, R);
 	}
 	
 	private void setNewChild(NodeVO parent, NodeVO oldChild, NodeVO newChild) {
