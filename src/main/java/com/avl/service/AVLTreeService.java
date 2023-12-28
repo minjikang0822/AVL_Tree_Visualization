@@ -5,7 +5,8 @@ import com.avl.model.NodeVO;
 
 public interface AVLTreeService {
 	AVLTreeVO insertNode(AVLTreeVO tree, int key);
+	AVLTreeVO insertNode(int key);
 	AVLTreeVO deleteNode(AVLTreeVO tree, int key);
 	AVLTreeVO deleteNode(AVLTreeVO tree, NodeVO node);
-	AVLTreeVO searchNode(AVLTreeVO tree, int key);
+	NodeVO[] searchNode(AVLTreeVO tree, int key);
 }
