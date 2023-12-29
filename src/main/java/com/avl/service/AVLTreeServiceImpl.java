@@ -38,7 +38,43 @@ public class AVLTreeServiceImpl implements AVLTreeService {
 		if (heightChanged) {
 			recalculateHeight(NewNode);
 			
+			NodeVO[] unbalancedInfo = unbalancedA(tree, NewNode);
+			NodeVO parentA = unbalancedInfo[0];
+			NodeVO A = unbalancedInfo[1];
 			
+			int BF_A = calculateBF(A);
+			// LEFT HEAVY
+			if (BF_A > 1) {
+				NodeVO L = A.getLeft();
+				NodeVO LL = L.getLeft();
+				NodeVO LR = L.getRight();
+				
+				if (LL.getLeft() == NewNode || LL.getRight() == NewNode) {
+					rightRotation(tree, parentA, A);
+				}
+				else if (LR.getLeft() == NewNode) {
+					leftRightRotationA(tree, parentA, A);
+				}
+				else if (LR.getRight() == NewNode) {
+					leftRightRotationB(tree, parentA, A);
+				}
+			}
+			// RIGHT HEAVY
+			else if (BF_A <-1) {
+				NodeVO R = A.getRight();
+				NodeVO RL = R.getLeft();
+				NodeVO RR = R.getRight();
+				
+				if (RR.getLeft() == NewNode || RR.getRight() == NewNode) {
+					leftRotation(tree, parentA, A);
+				}
+				else if (RL.getLeft() == NewNode) {
+					rightLeftRotationA(tree, parentA, A);
+				}
+				else if (RL.getRight() == NewNode) {
+					rightLeftRotationB(tree, parentA, A);
+				}
+			}
 		}
 		
 		NodeVO rootNode = tree.getRoot();
@@ -95,19 +131,29 @@ public class AVLTreeServiceImpl implements AVLTreeService {
 	} // calculateBF ----------------------------------------
 
 	// CASE 1: RIGHT ROTATION
-	private void rightRotation(NodeVO parentA, NodeVO A) {
+	private void rightRotation(AVLTreeVO tree, NodeVO parentA, NodeVO A) {
 		NodeVO L = A.getLeft();
 		NodeVO R = A.getRight();
+		NodeVO LL = L.getLeft();
 		NodeVO LR = L.getRight();
 
 		L.setRight(A);
 		A.setLeft(LR);
+		
+		int LR_height = (LR != null) ? LR.getHeight() : -1;
+		int R_height = (R != null) ? R.getHeight() : -1;
+		
+		A.setHeight((LR_height > R_height) ? LR_height+1 : R_height+1);
+		
+		int A_height = (A != null) ? A.getHeight() : -1;
+		int LL_height = (LL != null) ? LL.getHeight() : -1;
+		L.setHeight((A_height > LL_height) ? A_height+1 : LL_height+1);
 
-		setNewChild(parentA, A, L);
-	}
+		setNewChild(tree, parentA, A, L);
+	} // RIGHT ROTATION -------------------------------------
 
 	// CASE 2-A: LEFT RIGHT ROTATION
-	private void leftRightRotationA(NodeVO parentA, NodeVO A) {
+	private void leftRightRotationA(AVLTreeVO tree, NodeVO parentA, NodeVO A) {
 		NodeVO L = A.getLeft();
 		NodeVO R = A.getRight();
 		NodeVO LR = L.getRight();
@@ -121,11 +167,11 @@ public class AVLTreeServiceImpl implements AVLTreeService {
 		LR.setRight(A);
 		A.setLeft(null);
 
-		setNewChild(parentA, A, LR);
+		setNewChild(tree, parentA, A, LR);
 	}
 
 	// CASE 2-B: LEFT RIGHT ROTATION
-	private void leftRightRotationB(NodeVO parentA, NodeVO A) {
+	private void leftRightRotationB(AVLTreeVO tree, NodeVO parentA, NodeVO A) {
 		NodeVO L = A.getLeft();
 		NodeVO R = A.getRight();
 		NodeVO LR = L.getRight();
@@ -139,11 +185,11 @@ public class AVLTreeServiceImpl implements AVLTreeService {
 		LR.setRight(A);
 		A.setLeft(NewNode);
 
-		setNewChild(parentA, A, LR);
+		setNewChild(tree, parentA, A, LR);
 	}
 
 	// CASE 3: LEFT ROTATION
-	private void leftRotation(NodeVO parentA, NodeVO A) {
+	private void leftRotation(AVLTreeVO tree, NodeVO parentA, NodeVO A) {
 		NodeVO L = A.getLeft();
 		NodeVO R = A.getRight();
 		NodeVO RL = R.getLeft();
@@ -151,11 +197,11 @@ public class AVLTreeServiceImpl implements AVLTreeService {
 		R.setLeft(A);
 		A.setRight(RL);
 
-		setNewChild(parentA, A, R);
+		setNewChild(tree, parentA, A, R);
 	}
 
 	// CASE 4-A: RIGHT LEFT ROTATION
-	private void rightLeftRotationA(NodeVO parentA, NodeVO A) {
+	private void rightLeftRotationA(AVLTreeVO tree, NodeVO parentA, NodeVO A) {
 		NodeVO R = A.getRight();
 		NodeVO RL = R.getLeft();
 		NodeVO NewNode = RL.getLeft();
@@ -168,11 +214,11 @@ public class AVLTreeServiceImpl implements AVLTreeService {
 		RL.setLeft(A);
 		A.setRight(NewNode);
 
-		setNewChild(parentA, A, RL);
+		setNewChild(tree, parentA, A, RL);
 	}
 
 	// CASE 4-B: RIGHT LEFT ROTATION
-	private void rightLeftRotationB(NodeVO parentA, NodeVO A) {
+	private void rightLeftRotationB(AVLTreeVO tree, NodeVO parentA, NodeVO A) {
 		NodeVO R = A.getRight();
 		NodeVO RL = R.getLeft();
 		NodeVO NewNode = RL.getLeft();
@@ -185,7 +231,7 @@ public class AVLTreeServiceImpl implements AVLTreeService {
 		RL.setLeft(A);
 		A.setRight(null);
 
-		setNewChild(parentA, A, RL);
+		setNewChild(tree, parentA, A, RL);
 	}
 	
 	private NodeVO[] unbalancedA(AVLTreeVO tree, NodeVO NewNode) {
@@ -206,7 +252,13 @@ public class AVLTreeServiceImpl implements AVLTreeService {
 		return result;
 	} // unbalancedA ---------------------------------------------
 
-	private void setNewChild(NodeVO parent, NodeVO oldChild, NodeVO newChild) {
+	private void setNewChild(AVLTreeVO tree, NodeVO parent, NodeVO oldChild, NodeVO newChild) {
+		if (tree.getRoot() == oldChild) {
+			tree.setRoot(newChild);
+			newChild.setDepth(0);
+			return;
+		}
+	
 		if (parent.getLeft() == oldChild) {
 			parent.setLeft(newChild);
 		} else {
