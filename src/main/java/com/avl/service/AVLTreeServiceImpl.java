@@ -9,11 +9,15 @@ public class AVLTreeServiceImpl implements AVLTreeService {
 	public AVLTreeVO insertNode(AVLTreeVO tree, int key) {
 		NodeVO NewNode = new NodeVO(key);
 		NodeVO crr = tree.getRoot();
-		
+		boolean heightChanged = false;
+		// find the node to add a new node as its child
 		while (true) {
 			if (crr.getKey() > key) {
 				if (crr.getLeft() == null) {
 					crr.setLeft(NewNode);
+					if (crr.getRight() == null) {
+						heightChanged = true;
+					}
 					break;
 				}
 				crr = crr.getLeft();
@@ -21,6 +25,9 @@ public class AVLTreeServiceImpl implements AVLTreeService {
 			else {
 				if (crr.getRight() == null) {
 					crr.setRight(NewNode);
+					if (crr.getLeft() == null) {
+						heightChanged = true;
+					}
 					break;
 				}
 				crr = crr.getRight();
@@ -28,13 +35,18 @@ public class AVLTreeServiceImpl implements AVLTreeService {
 		}
 		NewNode.setDepth(crr.getDepth() + 1);
 		
+		if (heightChanged) {
+			recalculateHeight(NewNode);
+			
+			
+		}
 		
 		NodeVO rootNode = tree.getRoot();
 		rootNode.setDepth(0);
 		recalculateDepth(rootNode);
 		return null;
 	} // insertNode ----------------------------------------
-
+	
 	@Override
 	public AVLTreeVO insertNode(int key) {
 		// Create new AVL Tree
@@ -201,6 +213,25 @@ public class AVLTreeServiceImpl implements AVLTreeService {
 			parent.setRight(newChild);
 		}
 	} // setNewChild ---------------------------------------------
+	
+	private void recalculateHeight(NodeVO childNode) {
+		if (childNode.getDepth() == 0) return;
+		
+		int childVal = childNode.getKey();
+		NodeVO parentNode = childNode;
+		
+		while (parentNode != childNode) {
+			if (parentNode.getLeft() == childNode || parentNode.getRight() == childNode) {
+				int leftHeight = (parentNode.getLeft() != null)? parentNode.getLeft().getHeight() : -1;
+				int rightHeight = (parentNode.getRight() != null)? parentNode.getRight().getHeight() : -1;
+				parentNode.setHeight((leftHeight > rightHeight)? leftHeight+1 : rightHeight+1);
+				break;
+			}
+			parentNode = (parentNode.getKey() > childVal)? parentNode.getLeft() : parentNode.getRight();
+		}
+		
+		recalculateHeight(parentNode);
+	} // recalculateHeight ------------------------------------
 
 	private void recalculateDepth(NodeVO parentNode) {
 		int parentDepth = parentNode.getDepth();
