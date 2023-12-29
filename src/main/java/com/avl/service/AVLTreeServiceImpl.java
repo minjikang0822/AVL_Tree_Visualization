@@ -140,14 +140,8 @@ public class AVLTreeServiceImpl implements AVLTreeService {
 		L.setRight(A);
 		A.setLeft(LR);
 		
-		int LR_height = (LR != null) ? LR.getHeight() : -1;
-		int R_height = (R != null) ? R.getHeight() : -1;
-		
-		A.setHeight((LR_height > R_height) ? LR_height+1 : R_height+1);
-		
-		int A_height = (A != null) ? A.getHeight() : -1;
-		int LL_height = (LL != null) ? LL.getHeight() : -1;
-		L.setHeight((A_height > LL_height) ? A_height+1 : LL_height+1);
+		A.setHeight(parentHeight(LR, R));
+		L.setHeight(parentHeight(LL, A));
 
 		setNewChild(tree, parentA, A, L);
 	} // RIGHT ROTATION -------------------------------------
@@ -156,6 +150,7 @@ public class AVLTreeServiceImpl implements AVLTreeService {
 	private void leftRightRotationA(AVLTreeVO tree, NodeVO parentA, NodeVO A) {
 		NodeVO L = A.getLeft();
 		NodeVO R = A.getRight();
+		NodeVO LL = L.getLeft();
 		NodeVO LR = L.getRight();
 		NodeVO NewNode = LR.getRight();
 
@@ -166,6 +161,10 @@ public class AVLTreeServiceImpl implements AVLTreeService {
 		// STEP2: RIGHT ROTATION
 		LR.setRight(A);
 		A.setLeft(null);
+		
+		L.setHeight(parentHeight(LL, NewNode));
+		A.setHeight(parentHeight(null, R));
+		LR.setHeight(parentHeight(L, A));
 
 		setNewChild(tree, parentA, A, LR);
 	}
@@ -174,6 +173,7 @@ public class AVLTreeServiceImpl implements AVLTreeService {
 	private void leftRightRotationB(AVLTreeVO tree, NodeVO parentA, NodeVO A) {
 		NodeVO L = A.getLeft();
 		NodeVO R = A.getRight();
+		NodeVO LL = L.getLeft();
 		NodeVO LR = L.getRight();
 		NodeVO NewNode = LR.getRight();
 
@@ -184,6 +184,10 @@ public class AVLTreeServiceImpl implements AVLTreeService {
 		// STEP2: RIGHT ROTATION
 		LR.setRight(A);
 		A.setLeft(NewNode);
+		
+		L.setHeight(parentHeight(LL, null));
+		A.setHeight(parentHeight(NewNode, R));
+		LR.setHeight(parentHeight(L, A));
 
 		setNewChild(tree, parentA, A, LR);
 	}
@@ -193,17 +197,25 @@ public class AVLTreeServiceImpl implements AVLTreeService {
 		NodeVO L = A.getLeft();
 		NodeVO R = A.getRight();
 		NodeVO RL = R.getLeft();
+		NodeVO RR = R.getRight();
+		NodeVO NewNode = (RR.getLeft() != null) ? RR.getLeft() : RR.getRight();
 
 		R.setLeft(A);
 		A.setRight(RL);
+		
+		A.setHeight(parentHeight(L, RL));
+		RR.setHeight(parentHeight(NewNode, null));
+		R.setHeight(parentHeight(A, RR));
 
 		setNewChild(tree, parentA, A, R);
 	}
 
 	// CASE 4-A: RIGHT LEFT ROTATION
 	private void rightLeftRotationA(AVLTreeVO tree, NodeVO parentA, NodeVO A) {
+		NodeVO L = A.getLeft();
 		NodeVO R = A.getRight();
 		NodeVO RL = R.getLeft();
+		NodeVO RR = R.getRight();
 		NodeVO NewNode = RL.getLeft();
 
 		// STEP1: RIGHT ROTATION
@@ -213,14 +225,20 @@ public class AVLTreeServiceImpl implements AVLTreeService {
 		// STEP2: LEFT ROTATION
 		RL.setLeft(A);
 		A.setRight(NewNode);
+		
+		A.setHeight(parentHeight(L, NewNode));
+		R.setHeight(parentHeight(null, RR));
+		RL.setHeight(parentHeight(A, R));
 
 		setNewChild(tree, parentA, A, RL);
 	}
 
 	// CASE 4-B: RIGHT LEFT ROTATION
 	private void rightLeftRotationB(AVLTreeVO tree, NodeVO parentA, NodeVO A) {
+		NodeVO L = A.getLeft();
 		NodeVO R = A.getRight();
 		NodeVO RL = R.getLeft();
+		NodeVO RR = R.getRight();
 		NodeVO NewNode = RL.getLeft();
 
 		// STEP1: RIGHT ROTATION
@@ -230,6 +248,10 @@ public class AVLTreeServiceImpl implements AVLTreeService {
 		// STEP2: LEFT ROTATION
 		RL.setLeft(A);
 		A.setRight(null);
+		
+		A.setHeight(parentHeight(L, null));
+		R.setHeight(parentHeight(NewNode, RR));
+		RL.setHeight(parentHeight(A, R));
 
 		setNewChild(tree, parentA, A, RL);
 	}
@@ -265,6 +287,14 @@ public class AVLTreeServiceImpl implements AVLTreeService {
 			parent.setRight(newChild);
 		}
 	} // setNewChild ---------------------------------------------
+	
+	private int parentHeight(NodeVO leftChild, NodeVO rightChild) {
+		int leftChild_height = (leftChild != null) ? leftChild.getHeight() : -1;
+		int rightChild_height = (rightChild != null) ? rightChild.getHeight() : -1;
+		
+		int max_height = (leftChild_height > rightChild_height) ? leftChild_height : rightChild_height;
+		return max_height + 1;
+	} // parentHeight ---------------------------------------------
 	
 	private void recalculateHeight(NodeVO childNode) {
 		if (childNode.getDepth() == 0) return;
