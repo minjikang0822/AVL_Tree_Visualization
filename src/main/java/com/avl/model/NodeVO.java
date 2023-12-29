@@ -17,12 +17,6 @@ public class NodeVO {
 		this.right = null;
 	}
 	
-	public NodeVO(int key, NodeVO left) {
-		this.key = key;
-		this.left = left;
-		this.right = null;
-	}
-	
 	public NodeVO(int key, NodeVO left, NodeVO right) {
 		this.key = key;
 		this.left = left;
