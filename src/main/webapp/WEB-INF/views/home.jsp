@@ -35,9 +35,10 @@
 				data : {
 					newValue : newValue
 				},
+				dataType:'json',
 
 				success : function(res) {
-					updateTree();
+					updateTree(res);
 					alert("SUCCESS");
 				},
 				error : function(e) {
@@ -51,8 +52,13 @@
 		});
 	});
 	
-	function updateTree(treeInfo) {
-		alert("hello");
+	function updateTree(res) {
+		alert(JSON.stringify(res));
+		
+		if (typeof res === 'object' && res.root) {
+	        $(".node-container").append('<div class="node">' + res.root.key + '</div>');
+	    }
+
 	}
 
 	function resetTree() {
