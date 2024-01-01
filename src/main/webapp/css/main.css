@@ -26,13 +26,15 @@ body {
     margin: 5px;
 }
 
-.red-node {
+.node {
+	width: 3em;
+	height: 3em;
     background-color: red;
     color: #ffffff; /* 텍스트 색상 */
     border-radius: 50%; /* 원형 모양을 위한 테두리 반경 설정 */
     text-align: center;
-    line-height: 30px;
-    font-size: 20px;
+    line-height: 3em;
+    font-size: 2em;
     position: relative;
 }
 

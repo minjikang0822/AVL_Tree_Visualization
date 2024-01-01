@@ -301,12 +301,12 @@ public class AVLTreeServiceImpl implements AVLTreeService {
 	} // parentHeight ---------------------------------------------
 	
 	private void recalculateHeight(NodeVO childNode) {
-		if (childNode.getDepth() == 0) return;
+		if (childNode == null || childNode.getDepth() == 0) return;
 		
 		int childVal = childNode.getKey();
 		NodeVO parentNode = childNode;
 		
-		while (parentNode != childNode) {
+		while (parentNode != null) {
 			if (parentNode.getLeft() == childNode || parentNode.getRight() == childNode) {
 				int leftHeight = (parentNode.getLeft() != null)? parentNode.getLeft().getHeight() : -1;
 				int rightHeight = (parentNode.getRight() != null)? parentNode.getRight().getHeight() : -1;

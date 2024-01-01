@@ -1,7 +1,5 @@
 package com.avl.controller;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-
 import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +34,8 @@ public class HomeController {
 	}
 	
 	@PostMapping("/insert")
-	public String handleInsertRequest(@RequestParam("newValue") int newValue, Model model) {
+	@ResponseBody
+	public AVLTreeVO handleInsertRequest(@RequestParam("newValue") int newValue, Model model) {
 	    if (tree == null) {
 	        tree = treeService.insertNode(newValue);
 	    } else {
@@ -46,7 +45,7 @@ public class HomeController {
 	    model.addAttribute("tree", tree);
 
 	    // Returning a view name to display the updated model
-	    return "/reloadPage";
+	    return tree;
 	}
 
 	

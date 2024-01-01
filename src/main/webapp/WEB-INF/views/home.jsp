@@ -1,4 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page import="com.avl.model.AVLTreeVO" %>
+<%@ page import="com.avl.model.NodeVO" %>
 <%@ page session="false"%>
 
 <html>
@@ -10,7 +12,8 @@
 	rel="stylesheet"
 	integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
 	crossorigin="anonymous">
-<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/main.css">
+<link rel="stylesheet" type="text/css"
+	href="<%=request.getContextPath()%>/css/main.css">
 
 <!-- import jQuery -->
 <script
@@ -34,6 +37,7 @@
 				},
 
 				success : function(res) {
+					updateTree();
 					alert("SUCCESS");
 				},
 				error : function(e) {
@@ -46,6 +50,10 @@
 			e.preventDefault();
 		});
 	});
+	
+	function updateTree(treeInfo) {
+		alert("hello");
+	}
 
 	function resetTree() {
 		alert('resetTree');
@@ -74,11 +82,12 @@
 			value="Delete" class="btn btn-success">
 	</form>
 	
-	<% String nodeText = "A"; %>
-	<!-- 노드를 나타내는 원 -->
-	<div class="red-node">
-	    <%= nodeText %>
+	<div class="node-container">
+	
 	</div>
+	
+
+
 
 
 	<c:choose>
