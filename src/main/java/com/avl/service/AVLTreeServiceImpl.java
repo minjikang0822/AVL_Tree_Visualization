@@ -1,10 +1,14 @@
 package com.avl.service;
 
+
+import org.springframework.stereotype.Service;
+
 import com.avl.model.AVLTreeVO;
 import com.avl.model.NodeVO;
 
+@Service("AVLTreeService")
 public class AVLTreeServiceImpl implements AVLTreeService {
-
+	
 	@Override
 	public AVLTreeVO insertNode(AVLTreeVO tree, int key) {
 		NodeVO NewNode = new NodeVO(key);

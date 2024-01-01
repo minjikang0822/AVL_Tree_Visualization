@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+   <!-- typeAlias 타입 별칭 설정 =============================== -->
+   <typeAliases>
+      <typeAlias type="com.avl.model.AVLTreeVO" alias="AVLTreeVO"/>
+      <typeAlias type="com.avl.model.NodeVO" alias="NodeVO"/>
+   </typeAliases>
+   
+   <!-- mapper 정의 ========================================== -->
+   <mappers>
+      <!-- SQL문을 모아놓은 파일 -->
+      <mapper resource="config/mybatis/mapper/AVLTreeMapper.xml" />
+   </mappers>
+</configuration>

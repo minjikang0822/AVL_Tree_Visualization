@@ -14,13 +14,13 @@
 		$.ajax({
 			type: 'POST',
 			url: '/insert',
-			data: 'newValue=' + newValue
+			data: 'newValue=' + newValue,
 			
 			/* res holds the response data sent by the server */
 			success: function(res){
-				
+				alert(newValue);
 			}
-		})
+		});
 	}
 
     function resetTree() {
